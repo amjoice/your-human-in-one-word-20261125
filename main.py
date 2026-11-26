@@ -99,8 +99,7 @@ CANDIDATES = {
 
 def winning_word() -> str:
     """Return the highest-scored candidate from the sparring bracket."""
-    ranked = sorted(CANDIDATES.items(), key=lambda item: item[1], reverse=True)
-    return ranked[0][0]
+    return max(CANDIDATES, key=CANDIDATES.__getitem__)
 
 
 def validate(word: str) -> str:
@@ -115,10 +114,11 @@ def validate(word: str) -> str:
 
 def main() -> None:
     word = validate(winning_word())
-    output_path = os.path.join("/output", "entry.txt")
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(word)
+    output_dir = os.sep + "output"
+    output_path = os.path.join(output_dir, "entry.txt")
+    os.makedirs(output_dir, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as handle:
+        handle.write(word)
 
 
 if __name__ == "__main__":
