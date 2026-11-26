@@ -97,15 +97,27 @@ CANDIDATES = {
     "Bigboss": 5.7,      # the big boss — Finalboss without the last level
 }
 
-WORD = max(CANDIDATES, key=CANDIDATES.get)
+def winning_word() -> str:
+    """Return the highest-scored candidate from the sparring bracket."""
+    ranked = sorted(CANDIDATES.items(), key=lambda item: item[1], reverse=True)
+    return ranked[0][0]
+
+
+def validate(word: str) -> str:
+    """Enforce the entry gate: exactly one word, 1 to 30 characters."""
+    cleaned = word.strip()
+    if not cleaned or " " in cleaned:
+        raise ValueError("entry must be exactly one word")
+    if not 1 <= len(cleaned) <= 30:
+        raise ValueError("entry must be 1 to 30 characters")
+    return cleaned
 
 
 def main() -> None:
-    word = WORD.strip()
-    assert word and " " not in word, "entry must be exactly one word"
-    assert 1 <= len(word) <= 30, "entry must be 1 to 30 characters"
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
+    word = validate(winning_word())
+    output_path = os.path.join("/output", "entry.txt")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(word)
 
 
